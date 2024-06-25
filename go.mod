@@ -1,4 +1,4 @@
-module github.com/jeypc/go-jwt-mux
+module github.com/nugrohoarr/golang-mux-jwt-boilerplate
 
 go 1.22.2
 
