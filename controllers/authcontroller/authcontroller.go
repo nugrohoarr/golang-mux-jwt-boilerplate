@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/jeypc/go-jwt-mux/config"
-	"github.com/jeypc/go-jwt-mux/helper"
-	"github.com/jeypc/go-jwt-mux/models"
+	"github.com/nugrohoarr/golang-mux-jwt-boilerplate/config"
+	"github.com/nugrohoarr/golang-mux-jwt-boilerplate/helper"
+	"github.com/nugrohoarr/golang-mux-jwt-boilerplate/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -62,8 +62,16 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		helper.ResponseJSON(w, http.StatusInternalServerError, response)
 		return
 	}
+	// set cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Path:     "/",
+		Value:    t,
+		Expires:  expTime,
+		HttpOnly: true,
+	})
 
-	response := map[string]string{"token": t}
+	response := map[string]string{"message": "success"}
 	helper.ResponseJSON(w, http.StatusOK, response)
 }
 
@@ -95,5 +103,15 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func LogOut(w http.ResponseWriter, r *http.Request) {
+	// set cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Path:     "/",
+		Value:    "",
+		MaxAge:   -1,
+		HttpOnly: true,
+	})
 
+	response := map[string]string{"message": "Logout success"}
+	helper.ResponseJSON(w, http.StatusOK, response)
 }
